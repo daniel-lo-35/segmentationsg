@@ -78,13 +78,14 @@ class VisualGenomeTrainData:
         
         # Remove corrupted images
         image_data = json.load(open(self.cfg.DATASETS.VISUAL_GENOME.IMAGE_DATA, 'r'))
-        self.corrupted_ims = ['1592', '1722', '4616', '4617']
+        # self.corrupted_ims = ['1592', '1722', '4616', '4617']
+        self.corrupted_ims = []
         self.image_data = []
         for i, img in enumerate(image_data):
             if str(img['image_id']) in self.corrupted_ims:
                 continue
             self.image_data.append(img)
-        assert(len(self.image_data) == 108073)
+        # assert(len(self.image_data) == 108073)
         self.masks = None
         if self.mask_location != "":
             try:
@@ -129,6 +130,8 @@ class VisualGenomeTrainData:
         """
         data_split = self.VG_attribute_h5['split'][:]
         split_flag = 2 if self.split == 'test' else 0
+        if self.split == 'val':
+            split_flag = 1
         split_mask = data_split == split_flag
         
         #Filter images without bounding boxes
@@ -137,17 +140,20 @@ class VisualGenomeTrainData:
             split_mask &= self.VG_attribute_h5['img_to_first_rel'][:] >= 0
         image_index = np.where(split_mask)[0]
         
-        if self.split == 'val':
-            image_index = image_index[:self.cfg.DATASETS.VISUAL_GENOME.NUMBER_OF_VALIDATION_IMAGES]
-        elif self.split == 'train':
-            image_index = image_index[self.cfg.DATASETS.VISUAL_GENOME.NUMBER_OF_VALIDATION_IMAGES:]
-        
+        # if self.split == 'val':
+        #     image_index = image_index[:self.cfg.DATASETS.VISUAL_GENOME.NUMBER_OF_VALIDATION_IMAGES]
+        # elif self.split == 'train':
+        #     image_index = image_index[self.cfg.DATASETS.VISUAL_GENOME.NUMBER_OF_VALIDATION_IMAGES:]
+
         split_mask = np.zeros_like(data_split).astype(bool)
         split_mask[image_index] = True
         
         # Get box information
         all_labels = self.VG_attribute_h5['labels'][:, 0]
-        all_attributes = self.VG_attribute_h5['attributes'][:, :]
+        try:
+            all_attributes = self.VG_attribute_h5['attributes'][:, :]
+        except:
+            all_attributes = np.zeros((self.VG_attribute_h5['labels'].shape[0], 0))
         all_boxes = self.VG_attribute_h5['boxes_{}'.format(self.cfg.DATASETS.VISUAL_GENOME.BOX_SCALE)][:]  # cx,cy,w,h
         assert np.all(all_boxes[:, :2] >= 0)  # sanity check
         assert np.all(all_boxes[:, 2:] > 0)  # no empty box

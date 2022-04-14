@@ -120,7 +120,7 @@ class RelationSampling(object):
             tgt_box = target.gt_boxes
             tgt_lab = target.gt_classes.long()
             tgt_rel_matrix = torch.zeros(tgt_lab.shape[0],tgt_lab.shape[0]).long().to(device) # [tgt, tgt]
-            tgt_rel_matrix[relation[:,0], relation[:,1]] = relation[:,2]
+            tgt_rel_matrix[relation[:,0].long(), relation[:,1].long()] = relation[:,2].long()
             # IoU matching
             ious = pairwise_iou(tgt_box, prp_box)  # [tgt, prp]
 

@@ -53,7 +53,8 @@ class SceneGraphMaskHeadTransfer(MaskRCNNConvUpsampleHead):
         if not segmentation_step:
             #Get mask for output class
             base_class_mask = x.index_select(1, output_to_coco_indexer)
-            novel_class_mask = torch.bmm(similarity_matrix.unsqueeze(0).expand(x.size(0),-1,-1), x.view(*x.size()[:2],-1)).view(x.size(0), -1, *x.size()[2:])
+            # novel_class_mask = torch.bmm(similarity_matrix.unsqueeze(0).expand(x.size(0),-1,-1), x.view(*x.size()[:2],-1)).view(x.size(0), -1, *x.size()[2:])
+            novel_class_mask = torch.bmm(similarity_matrix.unsqueeze(0).expand(x.size(0),-1,x.size(1)), x.view(*x.size()[:2],-1)).view(x.size(0), -1, *x.size()[2:])
             output_class_mask = torch.zeros(x.size(0), base_class_mask.size(1) + novel_class_mask.size(1), *x.size()[2:]).to(x.device)
             output_class_mask = output_class_mask.index_copy(1, base_class_indexer, base_class_mask)
             output_class_mask = output_class_mask.index_copy(1, novel_class_indexer, novel_class_mask) 
