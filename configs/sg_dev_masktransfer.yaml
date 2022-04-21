@@ -13,8 +13,8 @@ MODEL:
   ROI_HEADS:
     NAME: 'SGSegmentationROIHeadsMaskTransfer'
     NUM_CLASSES: 150
-    EMBEDDINGS_PATH: "../data/embeddings/glove_mean_vg"
-    EMBEDDINGS_PATH_COCO: "../data/embeddings/glove_mean_coco"
+    EMBEDDINGS_PATH: "/home/r09521612/segmentationsg/segmentationsg/data/embeddings/glove_mean_vg"
+    EMBEDDINGS_PATH_COCO: "/home/r09521612/segmentationsg/segmentationsg/data/embeddings/glove_mean_coco"
   ROI_SCENEGRAPH_HEAD:
     NAME: 'SceneGraphSegmentationHead'
     PREDICTOR: 'MotifSegmentationPredictor'

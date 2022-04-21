@@ -72,12 +72,12 @@ class RelationSampling(object):
 
             # sym_binary_rels
             binary_rel = torch.zeros((num_prp, num_prp), device=device).long()
-            binary_rel[tgt_head_idxs, tgt_tail_idxs] = 1
-            binary_rel[tgt_tail_idxs, tgt_head_idxs] = 1
+            binary_rel[tgt_head_idxs.long(), tgt_tail_idxs.long()] = 1
+            binary_rel[tgt_tail_idxs.long(), tgt_head_idxs.long()] = 1
             rel_sym_binarys.append(binary_rel)
             
             rel_possibility = torch.ones((num_prp, num_prp), device=device).long() - torch.eye(num_prp, device=device).long()
-            rel_possibility[tgt_head_idxs, tgt_tail_idxs] = 0
+            rel_possibility[tgt_head_idxs.long(), tgt_tail_idxs.long()] = 0
             tgt_bg_idxs = torch.nonzero(rel_possibility > 0, as_tuple=False)
 
             # generate fg bg rel_pairs
