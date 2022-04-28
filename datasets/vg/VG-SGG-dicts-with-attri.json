@@ -1,0 +1,1 @@
+{"label_to_idx": {"intersection": 1}, "idx_to_label": {"1": "intersection"}, "predicate_to_idx": {"spacing": 1}, "idx_to_predicate": {"1": "spacing"}, "attribute_to_idx": {}, "idx_to_attribute": {}, "predicate_count": {"spacing": 69618}, "object_count": {"intersection": 24487}, "attribute_count": {}}
